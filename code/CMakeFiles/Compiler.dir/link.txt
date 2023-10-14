@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/Compiler.dir/Compilers.c.o CMakeFiles/Compiler.dir/Reader.c.o CMakeFiles/Compiler.dir/MainReader.c.o -o Compiler 

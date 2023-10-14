@@ -1,0 +1,3 @@
+/home/sinasun/Projects/college/nova_compiler/code/CMakeFiles/Compiler.dir
+/home/sinasun/Projects/college/nova_compiler/code/CMakeFiles/edit_cache.dir
+/home/sinasun/Projects/college/nova_compiler/code/CMakeFiles/rebuild_cache.dir

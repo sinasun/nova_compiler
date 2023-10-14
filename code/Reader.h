@@ -83,7 +83,7 @@ enum READER_MODE {
 #define READER_ERROR		(-1)						/* General error message */
 #define READER_TERMINATOR	'\0'							/* General EOF */
 
-/* CONSTANTS DEFINITION: PREFIXED BY LANGUAGE NAME (SOFIA) .................................. */
+/* CONSTANTS DEFINITION: PREFIXED BY LANGUAGE NAME (NOVASCRIPT) .................................. */
 
 /* You should add your own constant definitions here */
 #define READER_MAX_SIZE	INT_MAX-1	/* maximum capacity */ 
@@ -103,54 +103,54 @@ enum READER_MODE {
 
 #define CHARSEOF			(-1)		/* EOF Code for Reader */
 
-/* STRUCTURES DEFINITION: SUFIXED BY LANGUAGE NAME (SOFIA) .................................. */
+/* STRUCTURES DEFINITION: SUFIXED BY LANGUAGE NAME (novaScript) .................................. */
 
 /* TODO: Adjust datatypes */
 
 /* Offset declaration */
 typedef struct position {
-	sofia_intg mark;			/* the offset to the mark position (in chars) */
-	sofia_intg read;			/* the offset to the get a char position (in chars) */
-	sofia_intg wrte;			/* the offset to the add chars (in chars) */
+	novaScript_intg mark;			/* the offset to the mark position (in chars) */
+	novaScript_intg read;			/* the offset to the get a char position (in chars) */
+	novaScript_intg wrte;			/* the offset to the add chars (in chars) */
 } Position;
 
 /* Buffer structure */
 typedef struct bufferReader {
-	sofia_string	content;			/* pointer to the beginning of character array (character buffer) */
-	sofia_intg		size;				/* current dynamic memory size (in bytes) allocated to character buffer */
-	sofia_intg		increment;			/* character array increment factor */
-	sofia_intg		mode;				/* operational mode indicator */
-	sofia_byte		flags;				/* contains character array reallocation flag and end-of-buffer flag */
+	novaScript_string	content;			/* pointer to the beginning of character array (character buffer) */
+	novaScript_intg		size;				/* current dynamic memory size (in bytes) allocated to character buffer */
+	novaScript_intg		increment;			/* character array increment factor */
+	novaScript_intg		mode;				/* operational mode indicator */
+	novaScript_byte		flags;				/* contains character array reallocation flag and end-of-buffer flag */
 	Position		position;				/* Offset / position field */
-	sofia_intg		histogram[NCHAR];	/* Statistics of chars */
-	sofia_intg		numReaderErrors;	/* Number of errors from Reader */
+	novaScript_intg		histogram[NCHAR];	/* Statistics of chars */
+	novaScript_intg		numReaderErrors;	/* Number of errors from Reader */
 } Buffer, *BufferPointer;
 
 /* FUNCTIONS DECLARATION:  .................................. */
 /* General Operations */
-BufferPointer	readerCreate		(sofia_intg, sofia_intg, sofia_intg);
-BufferPointer	readerAddChar		(BufferPointer const, sofia_char);
-sofia_boln		readerClear		    (BufferPointer const);
-sofia_boln		readerFree		    (BufferPointer const);
-sofia_boln		readerIsFull		(BufferPointer const);
-sofia_boln		readerIsEmpty		(BufferPointer const);
-sofia_boln		readerSetMark		(BufferPointer const, sofia_intg);
-sofia_intg		readerPrint		    (BufferPointer const);
-sofia_intg		readerLoad			(BufferPointer const, FILE* const);
-sofia_boln		readerRecover		(BufferPointer const);
-sofia_boln		readerRetract		(BufferPointer const);
-sofia_boln		readerRestore		(BufferPointer const);
+BufferPointer	readerCreate		(novaScript_intg, novaScript_intg, novaScript_intg);
+BufferPointer	readerAddChar		(BufferPointer const, novaScript_char);
+novaScript_boln		readerClear		    (BufferPointer const);
+novaScript_boln		readerFree		    (BufferPointer const);
+novaScript_boln		readerIsFull		(BufferPointer const);
+novaScript_boln		readerIsEmpty		(BufferPointer const);
+novaScript_boln		readerSetMark		(BufferPointer const, novaScript_intg);
+novaScript_intg		readerPrint		    (BufferPointer const);
+novaScript_intg		readerLoad			(BufferPointer const, FILE* const);
+novaScript_boln		readerRecover		(BufferPointer const);
+novaScript_boln		readerRetract		(BufferPointer const);
+novaScript_boln		readerRestore		(BufferPointer const);
 /* Getters */
-sofia_char		readerGetChar		(BufferPointer const);
-sofia_string	readerGetContent	(BufferPointer const, sofia_intg);
-sofia_intg		readerGetPosRead	(BufferPointer const);
-sofia_intg		readerGetPosWrte	(BufferPointer const);
-sofia_intg		readerGetPosMark	(BufferPointer const);
-sofia_intg		readerGetSize		(BufferPointer const);
-sofia_intg		readerGetInc		(BufferPointer const);
-sofia_intg		readerGetMode		(BufferPointer const);
-sofia_byte		readerGetFlags		(BufferPointer const);
-sofia_void		readerPrintStat		(BufferPointer const);
-sofia_intg		readerNumErrors		(BufferPointer const);
+novaScript_char		readerGetChar		(BufferPointer const);
+novaScript_string	readerGetContent	(BufferPointer const, novaScript_intg);
+novaScript_intg		readerGetPosRead	(BufferPointer const);
+novaScript_intg		readerGetPosWrte	(BufferPointer const);
+novaScript_intg		readerGetPosMark	(BufferPointer const);
+novaScript_intg		readerGetSize		(BufferPointer const);
+novaScript_intg		readerGetInc		(BufferPointer const);
+novaScript_intg		readerGetMode		(BufferPointer const);
+novaScript_byte		readerGetFlags		(BufferPointer const);
+novaScript_void		readerPrintStat		(BufferPointer const);
+novaScript_intg		readerNumErrors		(BufferPointer const);
 
 #endif
