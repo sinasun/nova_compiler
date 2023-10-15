@@ -105,8 +105,6 @@ novaScript_intg main(int argc, char** argv) {
 *************************************************************
 */
 
-/* TO_DO: Update your logo with your own language message */
-
 novaScript_void printLogo() {
 	printf("%s%s%s%s%s%s%s%s%s%s",
 		"\t=---------------------------------------------------------=\n",
