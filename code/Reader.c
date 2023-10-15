@@ -2,7 +2,7 @@
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Fall, 2023
-* Author: TO_DO
+* Author: Sina Khodaveisi, Ark Gupte 
 * Professors: Paulo Sousa
 ************************************************************
 =---------------------------------------=
@@ -78,7 +78,6 @@
 * Return value: bPointer (pointer to reader)
 * Algorithm: Allocation of memory according to inicial (default) values.
 * TODO ......................................................
-*	- Adjust datatypes for your LANGUAGE.
 *   - Use defensive programming
 *	- Check boundary conditions
 *	- Check flags.
@@ -87,19 +86,31 @@
 
 BufferPointer readerCreate(novaScript_intg size, novaScript_intg increment, novaScript_intg mode) {
 	BufferPointer readerPointer;
-	/* TO_DO: Defensive programming */
+    if (size <= 0 || increment <= 0 || (mode != MODE_FIXED && mode != MODE_ADDIT && mode != MODE_MULTI)) {
+        return NULL;
+    }
 	/* TO_DO: Adjust the values according to parameters */
 	readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));
 	if (!readerPointer)
 		return NULL;
 	readerPointer->content = (novaScript_string)malloc(size);
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Initialize the histogram */
+
+    if (!readerPointer->content) {
+        free(readerPointer);
+        return NULL;
+    }
+
+    for (int i = 0; i < NCHAR; i++) {
+        readerPointer->histogram[i] = 0;
+    }
+
 	readerPointer->size = size;
 	readerPointer->increment = increment;
 	readerPointer->mode = mode;
-	/* TO_DO: Initialize flags */
+
+    readerPointer->flags = 0;
 	/* TO_DO: The created flag must be signalized as EMP */
+    readerPointer->flags |= EMP_FLAG; 
 	/* NEW: Cleaning the content */
 	if (readerPointer->content)
 		readerPointer->content[0] = READER_TERMINATOR;
@@ -129,34 +140,50 @@ BufferPointer readerCreate(novaScript_intg size, novaScript_intg increment, nova
 BufferPointer readerAddChar(BufferPointer const readerPointer, novaScript_char ch) {
 	novaScript_string tempReader = NULL;
 	novaScript_intg newSize = 0;
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Reset Realocation */
+
+    if (readerPointer == NULL || readerPointer->content == NULL) {
+        return NULL;
+    }
+
+    readerPointer->flags &= ~REL_FLAG;
 	/* TO_DO: Test the inclusion of chars */
 	if (readerPointer->position.wrte * (novaScript_intg)sizeof(novaScript_char) < readerPointer->size) {
 		/* TO_DO: This buffer is NOT full */
 	} else {
-		/* TO_DO: Reset Full flag */
+        readerPointer->flags &= ~FUL_FLAG;
+
 		switch (readerPointer->mode) {
 		case MODE_FIXED:
 			return NULL;
 		case MODE_ADDIT:
-			/* TO_DO: Adjust new size */
-			/* TO_DO: Defensive programming */
+            newSize = readerPointer->size + readerPointer->increment;
+            if (newSize > READER_MAX_SIZE) {
+                return NULL;
+            }
 			break;
 		case MODE_MULTI:
-			/* TO_DO: Adjust new size */
-			/* TO_DO: Defensive programming */
+            newSize = readerPointer->size * readerPointer->increment;
+            if (newSize > READER_MAX_SIZE) {
+                return NULL;
+            }
 			break;
 		default:
 			return NULL;
 		}
-		/* TO_DO: New reader allocation */
-		/* TO_DO: Defensive programming */
-		/* TO_DO: Check Relocation */
+        tempReader = (novaScript_string)realloc(readerPointer->content, newSize);
+        if (tempReader == NULL) {
+            return NULL;
+        }
+        readerPointer->content = tempReader;
+        readerPointer->size = newSize;
+        readerPointer->flags |= REL_FLAG;
 	}
 	/* TO_DO: Add the char */
 	readerPointer->content[readerPointer->position.wrte++] = ch;
-	/* TO_DO: Updates histogram */
+    if (ch >= 0) {
+        readerPointer->histogram[ch]++;
+    }
+
 	return readerPointer;
 }
 
@@ -175,7 +202,9 @@ BufferPointer readerAddChar(BufferPointer const readerPointer, novaScript_char c
 *************************************************************
 */
 novaScript_boln readerClear(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
+    if (readerPointer == NULL || readerPointer->content == NULL) {
+        return NOVASCRIPT_FALSE;
+    }
 	/* TO_DO: Adjust flags original */
 	readerPointer->position.wrte = readerPointer->position.mark = readerPointer->position.read = 0;
 	return NOVASCRIPT_TRUE;
@@ -196,8 +225,13 @@ novaScript_boln readerClear(BufferPointer const readerPointer) {
 *************************************************************
 */
 novaScript_boln readerFree(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Free pointers */
+    if (readerPointer == NULL) {
+        return NOVASCRIPT_FALSE;
+    }
+    if (readerPointer->content != NULL) {
+        free(readerPointer->content);
+    }
+    free(readerPointer);
 	return NOVASCRIPT_TRUE;
 }
 
@@ -216,9 +250,10 @@ novaScript_boln readerFree(BufferPointer const readerPointer) {
 *************************************************************
 */
 novaScript_boln readerIsFull(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Check flag if buffer is FUL */
-	return NOVASCRIPT_FALSE;
+    if (readerPointer == NULL) {
+        return NOVASCRIPT_FALSE;
+    }
+    return (readerPointer->flags & FUL_FLAG) != 0 ? NOVASCRIPT_TRUE : NOVASCRIPT_FALSE;
 }
 
 
@@ -237,9 +272,10 @@ novaScript_boln readerIsFull(BufferPointer const readerPointer) {
 *************************************************************
 */
 novaScript_boln readerIsEmpty(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Check flag if buffer is EMP */
-	return NOVASCRIPT_FALSE;
+    if (readerPointer == NULL) {
+        return NOVASCRIPT_FALSE;
+    }
+    return (readerPointer->flags & EMP_FLAG) != 0 ? NOVASCRIPT_TRUE : NOVASCRIPT_FALSE;
 }
 
 /*
@@ -258,7 +294,9 @@ novaScript_boln readerIsEmpty(BufferPointer const readerPointer) {
 *************************************************************
 */
 novaScript_boln readerSetMark(BufferPointer const readerPointer, novaScript_intg mark) {
-	/* TO_DO: Defensive programming */
+    if (readerPointer == NULL || mark < 0 || mark > readerPointer->position.wrte) {
+        return NOVASCRIPT_FALSE;
+    }
 	/* TO_DO: Adjust mark */
 	readerPointer->position.mark = mark;
 	return NOVASCRIPT_TRUE;
@@ -283,6 +321,9 @@ novaScript_intg readerPrint(BufferPointer const readerPointer) {
 	novaScript_intg cont = 0;
 	novaScript_char c;
 	/* TO_DO: Defensive programming (including invalid chars) */
+	if (readerPointer == NULL) {
+		return 0;
+	}
 	c = readerGetChar(readerPointer);
 	/* TO_DO: Check flag if buffer EOB has achieved */
 	while (cont < readerPointer->position.wrte) {
@@ -313,6 +354,9 @@ novaScript_intg readerLoad(BufferPointer const readerPointer, FILE* const fileDe
 	novaScript_intg size = 0;
 	novaScript_char c;
 	/* TO_DO: Defensive programming */
+	if (readerPointer == NULL || fileDescriptor == NULL) {
+		return READER_ERROR;
+	}
 	c = (novaScript_char)fgetc(fileDescriptor);
 	while (!feof(fileDescriptor)) {
 		if (!readerAddChar(readerPointer, c)) {
@@ -342,7 +386,9 @@ novaScript_intg readerLoad(BufferPointer const readerPointer, FILE* const fileDe
 *************************************************************
 */
 novaScript_boln readerRecover(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
+	if (readerPointer == NULL) {
+		return NOVASCRIPT_FALSE;
+	}
 	/* TO_DO: Recover positions */
 	readerPointer->position.read = 0;
 	return NOVASCRIPT_TRUE;
@@ -364,8 +410,12 @@ novaScript_boln readerRecover(BufferPointer const readerPointer) {
 *************************************************************
 */
 novaScript_boln readerRetract(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
-	/* TO_DO: Retract (return 1 pos read) */
+	if (readerPointer == NULL) {
+		return NOVASCRIPT_FALSE;
+	}
+	if (readerPointer->position.read > 0) {
+		readerPointer->position.read--;
+	}
 	return NOVASCRIPT_TRUE;
 }
 
@@ -385,7 +435,9 @@ novaScript_boln readerRetract(BufferPointer const readerPointer) {
 *************************************************************
 */
 novaScript_boln readerRestore(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
+	if (readerPointer == NULL) {
+		return NOVASCRIPT_FALSE;
+	}
 	/* TO_DO: Restore positions (read/mark) */
 	readerPointer->position.read = readerPointer->position.mark;
 	return NOVASCRIPT_TRUE;
@@ -407,7 +459,9 @@ novaScript_boln readerRestore(BufferPointer const readerPointer) {
 *************************************************************
 */
 novaScript_char readerGetChar(BufferPointer const readerPointer) {
-	/* TO_DO: Defensive programming */
+	if (readerPointer == NULL || readerPointer->position.read >= readerPointer->position.wrte) {
+		return READER_TERMINATOR;
+	}
 	/* TO_DO: Check condition to read/wrte */
 	/* TO_DO: Set EOB flag */
 	/* TO_DO: Reset EOB flag */

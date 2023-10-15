@@ -2,7 +2,7 @@
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Fall, 2023
-* Author: TO_DO
+* Author: Sina Khodaveisi, Ark Gupte
 * Professors: Paulo Sousa
 ************************************************************
 =---------------------------------------=
