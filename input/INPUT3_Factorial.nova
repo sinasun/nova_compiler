@@ -1,19 +1,23 @@
-# Sofia Example 4:
-  Testing numbers (ex: factorial) #
-main& {
-    data {
-        int i$, n$, f$;
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var i, n, f int
+
+    f = 1
+    i = 1
+
+    fmt.Print("Write a number: ")
+    fmt.Scan(&n)
+
+    for i < n {
+        f = f * i
+        i = i + 1
     }
-    code {
-        f$=1;
-        i$=1;
-        print&('Write a number:');
-        input&(n$);
-        while (i$<n$) do {
-            f$ = f$ * i$;
-            i$ = i$ + 1;
-        };
-        print&('Factorial:');
-        print&(f$);
-    }
+
+    fmt.Println("Factorial:")
+    fmt.Println(f)
 }

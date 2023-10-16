@@ -1,13 +1,18 @@
-# Sofia Example 3:
-  Volume of a sphere #
-main& {
-	data {
-		real PI%, r%, Vol%;
-	}
-	code {
-		PI% = 3.14;
-		input&(r%);
-		Vol% = 4.0 / 3.0 * PI% * (r% * r% * r%);
-		print&(Vol%);
-	}
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+func main() {
+    PI := 3.14
+
+    var r, Vol float64
+
+    fmt.Print("Enter the radius of the sphere: ")
+    fmt.Scan(&r)
+
+    Vol = (4.0 / 3.0) * PI * math.Pow(r, 3)
+    fmt.Printf("Volume of the sphere: %f\n", Vol)
 }

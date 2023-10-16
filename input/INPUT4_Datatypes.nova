@@ -1,18 +1,19 @@
-#
-Sofia Example
-The program is lexically correct about the SOFIA city 
-#
-main& {
-	data {
-		int FoundationYear$;
-		real Area%, HDI%;
-		string CountryName@;
-	}
-	code {
-		FoundationYear$ = -7000;
-		Area% = 492.0;
-		HDI%=0.871;
-		CountryName@ = 'Bulgary';
-		print&(CountryName$);
-	}
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var FoundationYear int
+    var Area float64
+    var HDI float64
+    var CountryName string
+
+    FoundationYear = -7000
+    Area = 492.0
+    HDI = 0.871
+    CountryName = "Bulgaria"
+
+    fmt.Println(CountryName)
 }
