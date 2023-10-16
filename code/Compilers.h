@@ -21,7 +21,7 @@
 ************************************************************
 * File name: Compilers.h
 * Compiler: MS Visual Studio 2022
-* Course: CST 8152 – Compilers, Lab Section: [011, 012]
+* Course: CST 8152 ï¿½ Compilers, Lab Section: [011, 012]
 * Assignment: A12, A22, A32.
 * Date: May 01 2023
 * Professor: Paulo Sousa
@@ -45,33 +45,30 @@
  */
 
 /* Language name */
-#define STR_LANGNAME	"NovaScript"
+#define STR_LANGNAME "NovaScript"
 
 /* Logical constants - adapt for your language */
-#define NOVASCRIPT_TRUE  1
+#define NOVASCRIPT_TRUE 1
 #define NOVASCRIPT_FALSE 0
 
 /*
 ------------------------------------------------------------
 Data types definitions
 NOTE: Some types may not be directly used by your language,
-		but they can be necessary for conversions.
+        but they can be necessary for conversions.
 ------------------------------------------------------------
 */
 
-
 /* TO_DO: Define your typedefs */
-typedef char			novaScript_char;
-typedef char* novaScript_string;
-typedef int				novaScript_intg;
-typedef float			novaScript_real;
-typedef void			novaScript_void;
+typedef int novaScript_int;
+typedef long novaScript_int32;
+typedef float novaScript_float32;
+typedef void novaScript_void;
 
-typedef unsigned char	novaScript_boln;
-typedef unsigned char	novaScript_byte;
+typedef char novaScript_byte;
+typedef char *novaScript_string;
 
-typedef long			novaScript_long;
-typedef double			novaScript_doub;
+typedef unsigned char novaScript_bool;
 
 /*
 ------------------------------------------------------------
@@ -81,10 +78,11 @@ Programs:
 3: Parser - invokes MainParser code
 ------------------------------------------------------------
 */
-enum PROGRAMS {
-	PGM_READER	= 'r',
-	PGM_SCANNER = 's',
-	PGM_PARSER	= 'p'
+enum PROGRAMS
+{
+    PGM_READER = 'r',
+    PGM_SCANNER = 's',
+    PGM_PARSER = 'p'
 };
 
 /*
@@ -93,9 +91,9 @@ Main functions signatures
 (Code will be updated during next assignments)
 ------------------------------------------------------------
 */
-novaScript_intg mainReader(novaScript_intg argc, novaScript_string* argv);
+novaScript_int mainReader(novaScript_int argc, novaScript_string *argv);
 
-/* 
+/*
 TO_DO: Include later mainScaner (A22) and mainParser (A32)
 */
 novaScript_void printLogo();

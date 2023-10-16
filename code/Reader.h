@@ -21,7 +21,7 @@
 ************************************************************
 * File name: Reader.h
 * Compiler: MS Visual Studio 2022
-* Course: CST 8152 – Compilers, Lab Section: [011, 012]
+* Course: CST 8152 ï¿½ Compilers, Lab Section: [011, 012]
 * Assignment: A12.
 * Date: May 01 2023
 * Professor: Paulo Sousa
@@ -68,11 +68,11 @@ enum READER_MODE {
 
 /* Add your bit-masks constant definitions here - Defined for BOA */
 /* BITS                                (7654.3210) */
-#define READER_DEFAULT_FLAG 0x00 	/* (0000.0000)_2 = (000)_10 */
-#define END_FLAG 0x08
-#define REL_FLAG 0x04
-#define EMP_FLAG 0x02
-#define FUL_FLAG 0x01
+#define READER_DEFAULT_FLAG 0x00 /* (0000.0000)_2 = (000)_10 */
+#define FUL_FLAG 0x01 /* (0000.0001)_2 = (001)_10 */
+#define EMP_FLAG 0x02 /* (0000.0010)_2 = (002)_10 */
+#define REL_FLAG 0x04 /* (0000.0100)_2 = (004)_10 */
+#define END_FLAG 0x08 /* (0000.1000)_2 = (008)_10 */
 
 #define NCHAR				128			/* Chars from 0 to 127 */
 
@@ -82,48 +82,48 @@ enum READER_MODE {
 
 /* Offset declaration */
 typedef struct position {
-	novaScript_intg mark;			/* the offset to the mark position (in chars) */
-	novaScript_intg read;			/* the offset to the get a char position (in chars) */
-	novaScript_intg wrte;			/* the offset to the add chars (in chars) */
+	novaScript_int mark;			/* the offset to the mark position (in chars) */
+	novaScript_int read;			/* the offset to the get a char position (in chars) */
+	novaScript_int wrte;			/* the offset to the add chars (in chars) */
 } Position;
 
 /* Buffer structure */
 typedef struct bufferReader {
 	novaScript_string	content;			/* pointer to the beginning of character array (character buffer) */
-	novaScript_intg		size;				/* current dynamic memory size (in bytes) allocated to character buffer */
-	novaScript_intg		increment;			/* character array increment factor */
-	novaScript_intg		mode;				/* operational mode indicator */
-	novaScript_byte		flags;				/* contains character array reallocation flag and end-of-buffer flag */
+	novaScript_int		size;				/* current dynamic memory size (in bytes) allocated to character buffer */
+	novaScript_int		increment;			/* character array increment factor */
+	novaScript_int		mode;				/* operational mode indicator */
+	novaScript_bool		flags;				/* contains character array reallocation flag and end-of-buffer flag */
 	Position		position;				/* Offset / position field */
-	novaScript_intg		histogram[NCHAR];	/* Statistics of chars */
-	novaScript_intg		numReaderErrors;	/* Number of errors from Reader */
+	novaScript_int		histogram[NCHAR];	/* Statistics of chars */
+	novaScript_int		numReaderErrors;	/* Number of errors from Reader */
 } Buffer, *BufferPointer;
 
 /* FUNCTIONS DECLARATION:  .................................. */
 /* General Operations */
-BufferPointer	readerCreate		(novaScript_intg, novaScript_intg, novaScript_intg);
-BufferPointer	readerAddChar		(BufferPointer const, novaScript_char);
-novaScript_boln		readerClear		    (BufferPointer const);
-novaScript_boln		readerFree		    (BufferPointer const);
-novaScript_boln		readerIsFull		(BufferPointer const);
-novaScript_boln		readerIsEmpty		(BufferPointer const);
-novaScript_boln		readerSetMark		(BufferPointer const, novaScript_intg);
-novaScript_intg		readerPrint		    (BufferPointer const);
-novaScript_intg		readerLoad			(BufferPointer const, FILE* const);
-novaScript_boln		readerRecover		(BufferPointer const);
-novaScript_boln		readerRetract		(BufferPointer const);
-novaScript_boln		readerRestore		(BufferPointer const);
+BufferPointer	readerCreate		(novaScript_int, novaScript_int, novaScript_int);
+BufferPointer	readerAddChar		(BufferPointer const, novaScript_byte);
+novaScript_bool		readerClear		    (BufferPointer const);
+novaScript_bool		readerFree		    (BufferPointer const);
+novaScript_bool		readerIsFull		(BufferPointer const);
+novaScript_bool		readerIsEmpty		(BufferPointer const);
+novaScript_bool		readerSetMark		(BufferPointer const, novaScript_int);
+novaScript_int		readerPrint		    (BufferPointer const);
+novaScript_int		readerLoad			(BufferPointer const, FILE* const);
+novaScript_bool		readerRecover		(BufferPointer const);
+novaScript_bool		readerRetract		(BufferPointer const);
+novaScript_bool		readerRestore		(BufferPointer const);
 /* Getters */
-novaScript_char		readerGetChar		(BufferPointer const);
-novaScript_string	readerGetContent	(BufferPointer const, novaScript_intg);
-novaScript_intg		readerGetPosRead	(BufferPointer const);
-novaScript_intg		readerGetPosWrte	(BufferPointer const);
-novaScript_intg		readerGetPosMark	(BufferPointer const);
-novaScript_intg		readerGetSize		(BufferPointer const);
-novaScript_intg		readerGetInc		(BufferPointer const);
-novaScript_intg		readerGetMode		(BufferPointer const);
-novaScript_byte		readerGetFlags		(BufferPointer const);
+novaScript_byte		readerGetChar		(BufferPointer const);
+novaScript_string	readerGetContent	(BufferPointer const, novaScript_int);
+novaScript_int		readerGetPosRead	(BufferPointer const);
+novaScript_int		readerGetPosWrte	(BufferPointer const);
+novaScript_int		readerGetPosMark	(BufferPointer const);
+novaScript_int		readerGetSize		(BufferPointer const);
+novaScript_int		readerGetInc		(BufferPointer const);
+novaScript_int		readerGetMode		(BufferPointer const);
+novaScript_bool		readerGetFlags		(BufferPointer const);
 novaScript_void		readerPrintStat		(BufferPointer const);
-novaScript_intg		readerNumErrors		(BufferPointer const);
+novaScript_int		readerNumErrors		(BufferPointer const);
 
 #endif
