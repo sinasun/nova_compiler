@@ -62,7 +62,7 @@
 *************************************************************
 */
 
-BufferPointer readerCreate(novaScript_int size, novaScript_int increment, novaScript_int mode)
+BufferPointer readerCreate(int size, int increment, int mode)
 {
     BufferPointer readerPointer;
     if (size <= 0 || increment <= 0 || (mode != MODE_FIXED && mode != MODE_ADDIT && mode != MODE_MULTI))
@@ -72,7 +72,7 @@ BufferPointer readerCreate(novaScript_int size, novaScript_int increment, novaSc
     readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));
     if (!readerPointer)
         return NULL;
-    readerPointer->content = (novaScript_string)malloc(size);
+    readerPointer->content = (string)malloc(size);
 
     if (!readerPointer->content)
     {
@@ -112,10 +112,10 @@ BufferPointer readerCreate(novaScript_int size, novaScript_int increment, novaSc
 *************************************************************
 */
 
-BufferPointer readerAddChar(BufferPointer const readerPointer, novaScript_byte ch)
+BufferPointer readerAddChar(BufferPointer const readerPointer, rune ch)
 {
-    novaScript_string tempReader = NULL;
-    novaScript_int newSize = 0;
+    string tempReader = NULL;
+    int newSize = 0;
 
     if (readerPointer == NULL || readerPointer->content == NULL)
     {
@@ -123,7 +123,7 @@ BufferPointer readerAddChar(BufferPointer const readerPointer, novaScript_byte c
     }
 
     readerPointer->flags &= ~REL_FLAG;
-    if (readerPointer->position.wrte * (novaScript_int)sizeof(novaScript_byte) < readerPointer->size)
+    if (readerPointer->position.wrte * (int)sizeof(rune) < readerPointer->size)
     {
         // no action needed
     }
@@ -152,7 +152,7 @@ BufferPointer readerAddChar(BufferPointer const readerPointer, novaScript_byte c
         default:
             return NULL;
         }
-        tempReader = (novaScript_string)realloc(readerPointer->content, newSize);
+        tempReader = (string)realloc(readerPointer->content, newSize);
         if (tempReader == NULL)
         {
             return NULL;
@@ -180,7 +180,7 @@ BufferPointer readerAddChar(BufferPointer const readerPointer, novaScript_byte c
 *	Boolean value about operation success
 *************************************************************
 */
-novaScript_bool readerClear(BufferPointer const readerPointer)
+bool readerClear(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL || readerPointer->content == NULL)
     {
@@ -204,7 +204,7 @@ novaScript_bool readerClear(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-novaScript_bool readerFree(BufferPointer const readerPointer)
+bool readerFree(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -228,7 +228,7 @@ novaScript_bool readerFree(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-novaScript_bool readerIsFull(BufferPointer const readerPointer)
+bool readerIsFull(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -247,7 +247,7 @@ novaScript_bool readerIsFull(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-novaScript_bool readerIsEmpty(BufferPointer const readerPointer)
+bool readerIsEmpty(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -267,7 +267,7 @@ novaScript_bool readerIsEmpty(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-novaScript_bool readerSetMark(BufferPointer const readerPointer, novaScript_int mark)
+bool readerSetMark(BufferPointer const readerPointer, int mark)
 {
     if (readerPointer == NULL || mark < 0 || mark > readerPointer->position.wrte)
     {
@@ -289,10 +289,10 @@ novaScript_bool readerSetMark(BufferPointer const readerPointer, novaScript_int 
 *	Number of chars printed.
 *************************************************************
 */
-novaScript_int readerPrint(BufferPointer const readerPointer)
+int readerPrint(BufferPointer const readerPointer)
 {
-    novaScript_int cont = 0;
-    novaScript_byte c;
+    int cont = 0;
+    rune c;
 
     if (readerPointer == NULL)
     {
@@ -323,17 +323,17 @@ novaScript_int readerPrint(BufferPointer const readerPointer)
 *	Number of chars read and put in buffer.
 *************************************************************
 */
-novaScript_int readerLoad(BufferPointer const readerPointer, FILE *const fileDescriptor)
+int readerLoad(BufferPointer const readerPointer, FILE *const fileDescriptor)
 {
-    novaScript_int size = 0;
-    novaScript_byte c;
+    int size = 0;
+    rune c;
 
     if (readerPointer == NULL || fileDescriptor == NULL)
     {
         return READER_ERROR;
     }
 
-    c = (novaScript_byte)fgetc(fileDescriptor);
+    c = (rune)fgetc(fileDescriptor);
 
     while (!feof(fileDescriptor))
     {
@@ -343,7 +343,7 @@ novaScript_int readerLoad(BufferPointer const readerPointer, FILE *const fileDes
             return READER_ERROR;
         }
 
-        c = (novaScript_byte)fgetc(fileDescriptor);
+        c = (rune)fgetc(fileDescriptor);
         size++;
     }
 
@@ -360,7 +360,7 @@ novaScript_int readerLoad(BufferPointer const readerPointer, FILE *const fileDes
 *************************************************************
 */
 
-novaScript_bool readerRecover(BufferPointer const readerPointer)
+bool readerRecover(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -382,7 +382,7 @@ novaScript_bool readerRecover(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-novaScript_bool readerRetract(BufferPointer const readerPointer)
+bool readerRetract(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -407,7 +407,7 @@ novaScript_bool readerRetract(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-novaScript_bool readerRestore(BufferPointer const readerPointer)
+bool readerRestore(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -429,7 +429,7 @@ novaScript_bool readerRestore(BufferPointer const readerPointer)
 *	Char in the getC position.
 *************************************************************
 */
-novaScript_byte readerGetChar(BufferPointer const readerPointer)
+rune readerGetChar(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL || readerPointer->position.read >= readerPointer->position.wrte)
     {
@@ -457,7 +457,7 @@ novaScript_byte readerGetChar(BufferPointer const readerPointer)
 *	Position of string char.
 *************************************************************
 */
-novaScript_string readerGetContent(BufferPointer const readerPointer, novaScript_int pos)
+string readerGetContent(BufferPointer const readerPointer, int pos)
 {
     if (readerPointer == NULL || pos < 0 || pos >= readerPointer->position.wrte)
     {
@@ -477,7 +477,7 @@ novaScript_string readerGetContent(BufferPointer const readerPointer, novaScript
 *	The read position offset.
 *************************************************************
 */
-novaScript_int readerGetPosRead(BufferPointer const readerPointer)
+int readerGetPosRead(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -497,7 +497,7 @@ novaScript_int readerGetPosRead(BufferPointer const readerPointer)
 *	Write position
 *************************************************************
 */
-novaScript_int readerGetPosWrte(BufferPointer const readerPointer)
+int readerGetPosWrte(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -517,7 +517,7 @@ novaScript_int readerGetPosWrte(BufferPointer const readerPointer)
 *	Mark position.
 *************************************************************
 */
-novaScript_int readerGetPosMark(BufferPointer const readerPointer)
+int readerGetPosMark(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -537,7 +537,7 @@ novaScript_int readerGetPosMark(BufferPointer const readerPointer)
 *	Size of buffer.
 *************************************************************
 */
-novaScript_int readerGetSize(BufferPointer const readerPointer)
+int readerGetSize(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -557,7 +557,7 @@ novaScript_int readerGetSize(BufferPointer const readerPointer)
 *	The Buffer increment.
 *************************************************************
 */
-novaScript_int readerGetInc(BufferPointer const readerPointer)
+int readerGetInc(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -577,7 +577,7 @@ novaScript_int readerGetInc(BufferPointer const readerPointer)
 *	Operational mode.
 *************************************************************
 */
-novaScript_int readerGetMode(BufferPointer const readerPointer)
+int readerGetMode(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -597,7 +597,7 @@ novaScript_int readerGetMode(BufferPointer const readerPointer)
 *	Flags from Buffer.
 *************************************************************
 */
-novaScript_bool readerGetFlags(BufferPointer const readerPointer)
+uint8 readerGetFlags(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -616,7 +616,7 @@ novaScript_bool readerGetFlags(BufferPointer const readerPointer)
 * Return value: (Void)
 *************************************************************
 */
-novaScript_void readerPrintStat(BufferPointer const readerPointer)
+void readerPrintStat(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
@@ -641,14 +641,14 @@ novaScript_void readerPrintStat(BufferPointer const readerPointer)
 *	Number of errors.
 *************************************************************
 */
-novaScript_int readerNumErrors(BufferPointer const readerPointer)
+int readerNumErrors(BufferPointer const readerPointer)
 {
     if (readerPointer == NULL)
     {
         return 0;
     }
 
-    novaScript_int numErrors = 0;
+    int numErrors = 0;
     for (int i = 0; i < NCHAR; i++)
     {
         if (i < 0 || i >= NCHAR || readerPointer->histogram[i] < 0)

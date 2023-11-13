@@ -61,8 +61,8 @@
 *************************************************************
 */
 
-novaScript_int main(int argc, char** argv) {
-	novaScript_int i;
+int main(int argc, char** argv) {
+	int i;
 	printLogo();
 	if (DEBUG) {
 		for (i = 0; i < argc; ++i)
@@ -75,7 +75,7 @@ novaScript_int main(int argc, char** argv) {
 			PGM_PARSER, "] - Parser\n");
 		return EXIT_FAILURE;
 	}
-	novaScript_byte option = argv[1][0];
+	rune option = argv[1][0];
 	switch (option) {
 	case PGM_READER:
 		printf("%s%c%s", "\n[Option '", PGM_READER, "': Starting READER .....]\n\n");
@@ -105,7 +105,7 @@ novaScript_int main(int argc, char** argv) {
 *************************************************************
 */
 
-novaScript_void printLogo() {
+void printLogo() {
 	printf("%s%s%s%s%s%s%s%s%s%s",
 		"\t=---------------------------------------------------------=\n",
 		"\t|              COMPILERS - ALGONQUIN COLLEGE (F23)        |\n",

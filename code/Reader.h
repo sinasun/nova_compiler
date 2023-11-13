@@ -82,48 +82,48 @@ enum READER_MODE {
 
 /* Offset declaration */
 typedef struct position {
-	novaScript_int mark;			/* the offset to the mark position (in chars) */
-	novaScript_int read;			/* the offset to the get a char position (in chars) */
-	novaScript_int wrte;			/* the offset to the add chars (in chars) */
+	int mark;			/* the offset to the mark position (in chars) */
+	int read;			/* the offset to the get a char position (in chars) */
+	int wrte;			/* the offset to the add chars (in chars) */
 } Position;
 
 /* Buffer structure */
 typedef struct bufferReader {
-	novaScript_string	content;			/* pointer to the beginning of character array (character buffer) */
-	novaScript_int		size;				/* current dynamic memory size (in bytes) allocated to character buffer */
-	novaScript_int		increment;			/* character array increment factor */
-	novaScript_int		mode;				/* operational mode indicator */
-	novaScript_bool		flags;				/* contains character array reallocation flag and end-of-buffer flag */
+	string	content;			/* pointer to the beginning of character array (character buffer) */
+	int		size;				/* current dynamic memory size (in bytes) allocated to character buffer */
+	int		increment;			/* character array increment factor */
+	int		mode;				/* operational mode indicator */
+	uint8		flags;				/* contains character array reallocation flag and end-of-buffer flag */
 	Position		position;				/* Offset / position field */
-	novaScript_int		histogram[NCHAR];	/* Statistics of chars */
-	novaScript_int		numReaderErrors;	/* Number of errors from Reader */
+	int		histogram[NCHAR];	/* Statistics of chars */
+	int		numReaderErrors;	/* Number of errors from Reader */
 } Buffer, *BufferPointer;
 
 /* FUNCTIONS DECLARATION:  .................................. */
 /* General Operations */
-BufferPointer	readerCreate		(novaScript_int, novaScript_int, novaScript_int);
-BufferPointer	readerAddChar		(BufferPointer const, novaScript_byte);
-novaScript_bool		readerClear		    (BufferPointer const);
-novaScript_bool		readerFree		    (BufferPointer const);
-novaScript_bool		readerIsFull		(BufferPointer const);
-novaScript_bool		readerIsEmpty		(BufferPointer const);
-novaScript_bool		readerSetMark		(BufferPointer const, novaScript_int);
-novaScript_int		readerPrint		    (BufferPointer const);
-novaScript_int		readerLoad			(BufferPointer const, FILE* const);
-novaScript_bool		readerRecover		(BufferPointer const);
-novaScript_bool		readerRetract		(BufferPointer const);
-novaScript_bool		readerRestore		(BufferPointer const);
+BufferPointer	readerCreate		(int, int, int);
+BufferPointer	readerAddChar		(BufferPointer const, rune);
+bool		readerClear		    (BufferPointer const);
+bool		readerFree		    (BufferPointer const);
+bool		readerIsFull		(BufferPointer const);
+bool		readerIsEmpty		(BufferPointer const);
+bool		readerSetMark		(BufferPointer const, int);
+int		readerPrint		    (BufferPointer const);
+int		readerLoad			(BufferPointer const, FILE* const);
+bool		readerRecover		(BufferPointer const);
+bool		readerRetract		(BufferPointer const);
+bool		readerRestore		(BufferPointer const);
 /* Getters */
-novaScript_byte		readerGetChar		(BufferPointer const);
-novaScript_string	readerGetContent	(BufferPointer const, novaScript_int);
-novaScript_int		readerGetPosRead	(BufferPointer const);
-novaScript_int		readerGetPosWrte	(BufferPointer const);
-novaScript_int		readerGetPosMark	(BufferPointer const);
-novaScript_int		readerGetSize		(BufferPointer const);
-novaScript_int		readerGetInc		(BufferPointer const);
-novaScript_int		readerGetMode		(BufferPointer const);
-novaScript_bool		readerGetFlags		(BufferPointer const);
-novaScript_void		readerPrintStat		(BufferPointer const);
-novaScript_int		readerNumErrors		(BufferPointer const);
+rune		readerGetChar		(BufferPointer const);
+string	readerGetContent	(BufferPointer const, int);
+int		readerGetPosRead	(BufferPointer const);
+int		readerGetPosWrte	(BufferPointer const);
+int		readerGetPosMark	(BufferPointer const);
+int		readerGetSize		(BufferPointer const);
+int		readerGetInc		(BufferPointer const);
+int		readerGetMode		(BufferPointer const);
+uint8		readerGetFlags		(BufferPointer const);
+void		readerPrintStat		(BufferPointer const);
+int		readerNumErrors		(BufferPointer const);
 
 #endif

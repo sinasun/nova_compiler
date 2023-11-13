@@ -77,21 +77,21 @@
 
  /* Global objects - variables (used in other codes as external) */
 BufferPointer stringLiteralTable;	/* This buffer implements String Literal Table */
-sofia_intg errorNumber;				/* Run-time error number = 0 by default (ANSI) */
+int errorNumber;				/* Run-time error number = 0 by default (ANSI) */
 
 /* External objects */
-extern sofia_intg line; /* Source code line numbers - defined in scanner.c */
-extern Token tokenizer(sofia_void);
+extern int line; /* Source code line numbers - defined in scanner.c */
+extern Token tokenizer(void);
 
 /*
  * -------------------------------------------------------------
  *  Function declarations
  * -------------------------------------------------------------
  */
-sofia_void printScannerError(sofia_string fmt, ...);
-sofia_void displayScanner(BufferPointer ptrBuffer);
-sofia_long getScannerFilesize(sofia_string fname);
-sofia_void printToken(Token t);
+void printScannerError(string fmt, ...);
+void displayScanner(BufferPointer ptrBuffer);
+int32 getScannerFilesize(string fname);
+void printToken(Token t);
 
 /*
 ************************************************************
@@ -103,12 +103,12 @@ sofia_void printToken(Token t);
  ***********************************************************
  */
 
-sofia_intg mainScanner(sofia_intg argc, sofia_string* argv) {
+int mainScanner(int argc, string* argv) {
 
 	BufferPointer sourceBuffer;		/* Pointer to input (source) buffer */
 	FILE* fileHandler;				/* Input file handle */
 	Token currentToken;				/* Token produced by the scanner */
-	sofia_intg loadSize = 0;			/* The size of the file loaded in the buffer */
+	int loadSize = 0;			/* The size of the file loaded in the buffer */
 
 	/* Check for correct arrguments - source file name */
 	if (argc <= 2) {
@@ -206,7 +206,7 @@ sofia_intg mainScanner(sofia_intg argc, sofia_string* argv) {
 ***********************************************************
 */
 
-sofia_void printScannerError(sofia_string fmt, ...) {
+void printScannerError(string fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
 	(void)vfprintf(stderr, fmt, ap);
@@ -224,7 +224,7 @@ sofia_void printScannerError(sofia_string fmt, ...) {
  ***********************************************************
  */
 
-sofia_void displayScanner(BufferPointer ptrBuffer) {
+void displayScanner(BufferPointer ptrBuffer) {
 	printf("\nPrinting buffer parameters:\n\n");
 	printf("The capacity of the buffer is:  %d\n", readerGetSize(ptrBuffer));
 	printf("The current size of the buffer is:  %d\n", readerGetPosWrte(ptrBuffer));
@@ -243,9 +243,9 @@ sofia_void displayScanner(BufferPointer ptrBuffer) {
  ***********************************************************
  */
 
-sofia_long getScannerFilesize(sofia_string fname) {
+int32 getScannerFilesize(string fname) {
 	FILE* fileInput;
-	sofia_long fileLength;
+	int32 fileLength;
 	fileInput = fopen(fname, "r");
 	if (fileInput == NULL) {
 		printScannerError("%s%s", "Cannot open file: ", fname);
