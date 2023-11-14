@@ -71,11 +71,11 @@
  *  Function declarations
  * -------------------------------------------------------------
  */
-novaScript_void bErrorPrint(novaScript_string fmt, ...);
-novaScript_void displayBuffer(Buffer *ptr_Buffer);
-novaScript_int32 getFileSize(novaScript_string fname);
-novaScript_int isNumber(const novaScript_string ns);
-novaScript_void startReader(novaScript_string, novaScript_string, novaScript_byte, novaScript_int, novaScript_int);
+void bErrorPrint(string fmt, ...);
+void displayBuffer(Buffer *ptr_Buffer);
+int32 getFileSize(string fname);
+int isNumber(const string ns);
+void startReader(string, string, rune, int, int);
 
 /*
 ************************************************************
@@ -87,14 +87,14 @@ novaScript_void startReader(novaScript_string, novaScript_string, novaScript_byt
 ************************************************************
 */
 
-novaScript_int mainReader(novaScript_int argc, novaScript_string *argv)
+int mainReader(int argc, string *argv)
 {
 
     /* Create source input buffer */
-    novaScript_string program = argv[0];
-    novaScript_string input = argv[2];
-    novaScript_byte mode = MODE_FIXED;
-    novaScript_int size = 0, increment = 0, wrongNumber = 0;
+    string program = argv[0];
+    string input = argv[2];
+    rune mode = MODE_FIXED;
+    int size = 0, increment = 0, wrongNumber = 0;
 
     /* Missing file name or/and mode parameter */
     if (argc <= 2)
@@ -165,13 +165,13 @@ novaScript_int mainReader(novaScript_int argc, novaScript_string *argv)
 *	- Increment: buffer increment.
 ************************************************************
 */
-novaScript_void startReader(novaScript_string program, novaScript_string input, novaScript_byte mode, novaScript_int size, novaScript_int increment)
+void startReader(string program, string input, rune mode, int size, int increment)
 {
 
     BufferPointer bufferp;       /* pointer to Buffer structure */
     FILE *fileHandler;           /* input file handle */
-    novaScript_int loadSize = 0; /* the size of the file loaded in the buffer */
-    novaScript_byte symbol;      /* symbol read from input file */
+    int loadSize = 0; /* the size of the file loaded in the buffer */
+    rune symbol;      /* symbol read from input file */
 
     /* Create buffer */
     bufferp = readerCreate(size, (char)increment, mode);
@@ -234,13 +234,13 @@ novaScript_void startReader(novaScript_string program, novaScript_string input, 
 ************************************************************
 */
 
-novaScript_void bErrorPrint(novaScript_string fmt, ...)
+void bErrorPrint(string fmt, ...)
 {
     /* Initialize variable list */
     va_list ap;
     va_start(ap, fmt);
 
-    (novaScript_void) vfprintf(stderr, fmt, ap);
+    (void) vfprintf(stderr, fmt, ap);
     va_end(ap);
 
     /* Move to new line */
@@ -256,10 +256,10 @@ novaScript_void bErrorPrint(novaScript_string fmt, ...)
 ************************************************************
 */
 
-novaScript_int32 getFileSize(novaScript_string fname)
+int32 getFileSize(string fname)
 {
     FILE *input;
-    novaScript_int32 flength;
+    int32 flength;
     input = fopen(fname, "r");
     if (input == NULL)
     {
@@ -282,10 +282,10 @@ novaScript_int32 getFileSize(novaScript_string fname)
 ************************************************************
 */
 
-novaScript_int isNumber(const novaScript_string ns)
+int isNumber(const string ns)
 {
-    novaScript_byte c;
-    novaScript_int i = 0;
+    rune c;
+    int i = 0;
     if (ns == NULL)
         return 0;
     while ((c = ns[i++]) == 0)
@@ -303,7 +303,7 @@ novaScript_int isNumber(const novaScript_string ns)
 ************************************************************
 */
 
-novaScript_void displayBuffer(Buffer *ptr_Buffer)
+void displayBuffer(Buffer *ptr_Buffer)
 {
     printf("\nPrinting buffer parameters:\n\n");
     printf("The capacity of the buffer is:  %d\n",

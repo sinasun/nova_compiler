@@ -75,7 +75,7 @@ enum TOKENS {
 };
 
 /* TO_DO: Define the list of keywords */
-static sofia_string tokenStrTable[NUM_TOKENS] = {
+static string tokenStrTable[NUM_TOKENS] = {
 	"ERR_T",
 	"MNID_T",
 	"INL_T",
@@ -99,39 +99,39 @@ typedef enum SourceEndOfFile { SEOF_0, SEOF_255 } EofOperator;
 
 /* TO_DO: Data structures for declaring the token and its attributes */
 typedef union TokenAttribute {
-	sofia_intg codeType;      /* integer attributes accessor */
+	int codeType;      /* integer attributes accessor */
 	AriOperator arithmeticOperator;		/* arithmetic operator attribute code */
 	RelOperator relationalOperator;		/* relational operator attribute code */
 	LogOperator logicalOperator;		/* logical operator attribute code */
 	EofOperator seofType;				/* source-end-of-file attribute code */
-	sofia_intg intValue;				/* integer literal attribute (value) */
-	sofia_intg keywordIndex;			/* keyword index in the keyword table */
-	sofia_intg contentString;			/* string literal offset from the beginning of the string literal buffer (stringLiteralTable->content) */
-	sofia_real floatValue;				/* floating-point literal attribute (value) */
-	sofia_char idLexeme[VID_LEN + 1];	/* variable identifier token attribute */
-	sofia_char errLexeme[ERR_LEN + 1];	/* error token attribite */
+	int intValue;				/* integer literal attribute (value) */
+	int keywordIndex;			/* keyword index in the keyword table */
+	int contentString;			/* string literal offset from the beginning of the string literal buffer (stringLiteralTable->content) */
+	float32 floatValue;				/* floating-point literal attribute (value) */
+	rune idLexeme[VID_LEN + 1];	/* variable identifier token attribute */
+	rune errLexeme[ERR_LEN + 1];	/* error token attribite */
 } TokenAttribute;
 
 /* TO_DO: Should be used if no symbol table is implemented */
 typedef struct idAttibutes {
-	sofia_byte flags;			/* Flags information */
+	uint8 flags;			/* Flags information */
 	union {
-		sofia_intg intValue;				/* Integer value */
-		sofia_real floatValue;			/* Float value */
-		sofia_string stringContent;		/* String value */
+		int intValue;				/* Integer value */
+		float32 floatValue;			/* Float value */
+		string stringContent;		/* String value */
 	} values;
 } IdAttibutes;
 
 /* Token declaration */
 typedef struct Token {
-	sofia_intg code;				/* token code */
+	int code;				/* token code */
 	TokenAttribute attribute;	/* token attribute */
 	IdAttibutes   idAttribute;	/* not used in this scanner implementation - for further use */
 } Token;
 
 /* Scanner */
 typedef struct scannerData {
-	sofia_intg scanHistogram[NUM_TOKENS];	/* Statistics of chars */
+	int scanHistogram[NUM_TOKENS];	/* Statistics of chars */
 } ScannerData, * pScanData;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,7 +164,7 @@ typedef struct scannerData {
 #define CHAR_CLASSES	8
 
 /* TO_DO: Transition table - type of states defined in separate table */
-static sofia_intg transitionTable[NUM_STATES][CHAR_CLASSES] = {
+static int transitionTable[NUM_STATES][CHAR_CLASSES] = {
 /*    [A-z],[0-9],    _,    &,   \', SEOF,    #, other
 	   L(0), D(1), U(2), M(3), Q(4), E(5), C(6),  O(7) */
 	{     1, ESNR, ESNR, ESNR,    4, ESWR,	  6, ESNR},	// S0: NOAS
@@ -185,7 +185,7 @@ static sofia_intg transitionTable[NUM_STATES][CHAR_CLASSES] = {
 #define FSWR	2		/* accepting state with retract */
 
 /* TO_DO: Define list of acceptable states */
-static sofia_intg stateType[NUM_STATES] = {
+static int stateType[NUM_STATES] = {
 	NOFS, /* 00 */
 	NOFS, /* 01 */
 	FSNR, /* 02 (MID) - Methods */
@@ -205,11 +205,11 @@ TO_DO: Adjust your functions'definitions
 */
 
 /* Static (local) function  prototypes */
-sofia_intg			startScanner(BufferPointer psc_buf);
-static sofia_intg	nextClass(sofia_char c);					/* character class function */
-static sofia_intg	nextState(sofia_intg, sofia_char);		/* state machine function */
-sofia_void			printScannerData(ScannerData scData);
-Token				tokenizer(sofia_void);
+int			startScanner(BufferPointer psc_buf);
+static int	nextClass(rune c);					/* character class function */
+static int	nextState(int, rune);		/* state machine function */
+void			printScannerData(ScannerData scData);
+Token				tokenizer(void);
 
 /*
 -------------------------------------------------
@@ -218,15 +218,15 @@ Automata definitions
 */
 
 /* TO_DO: Pointer to function (of one char * argument) returning Token */
-typedef Token(*PTR_ACCFUN)(sofia_string lexeme);
+typedef Token(*PTR_ACCFUN)(string lexeme);
 
 /* Declare accepting states functions */
-Token funcSL	(sofia_string lexeme);
-Token funcIL	(sofia_string lexeme);
-Token funcID	(sofia_string lexeme);
-Token funcCMT   (sofia_string lexeme);
-Token funcKEY	(sofia_string lexeme);
-Token funcErr	(sofia_string lexeme);
+Token funcSL	(string lexeme);
+Token funcIL	(string lexeme);
+Token funcID	(string lexeme);
+Token funcCMT   (string lexeme);
+Token funcKEY	(string lexeme);
+Token funcErr	(string lexeme);
 
 /* 
  * Accepting function (action) callback table (array) definition 
@@ -257,7 +257,7 @@ Language keywords
 #define KWT_SIZE 10
 
 /* TO_DO: Define the list of keywords */
-static sofia_string keywordTable[KWT_SIZE] = {
+static string keywordTable[KWT_SIZE] = {
 	"data",		/* KW00 */
 	"code",		/* KW01 */
 	"int",		/* KW02 */
@@ -280,13 +280,13 @@ static sofia_string keywordTable[KWT_SIZE] = {
 
 /* TO_DO: Should be used if no symbol table is implemented */
 typedef struct languageAttributes {
-	sofia_char indentationCharType;
-	sofia_intg indentationCurrentPos;
+	rune indentationCharType;
+	int indentationCurrentPos;
 	/* TO_DO: Include any extra attribute to be used in your scanner (OPTIONAL and FREE) */
 } LanguageAttributes;
 
 /* Number of errors */
-sofia_intg numScannerErrors;
+int numScannerErrors;
 
 /* Scanner data */
 ScannerData scData;

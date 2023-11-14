@@ -60,15 +60,17 @@ NOTE: Some types may not be directly used by your language,
 */
 
 /* TO_DO: Define your typedefs */
-typedef int novaScript_int;
-typedef long novaScript_int32;
-typedef float novaScript_float32;
-typedef void novaScript_void;
+// typedef int int;
+typedef long int32;
+typedef float float32;
+// typedef void void;
 
-typedef char novaScript_byte;
-typedef char *novaScript_string;
+typedef char rune;
+typedef char *string;
 
-typedef unsigned char novaScript_bool;
+typedef unsigned char uint8;
+
+// typedef unsigned char bool;
 
 /*
 ------------------------------------------------------------
@@ -91,11 +93,15 @@ Main functions signatures
 (Code will be updated during next assignments)
 ------------------------------------------------------------
 */
-novaScript_int mainReader(novaScript_int argc, novaScript_string *argv);
+int mainReader(int argc, string *argv);
+
+
+int mainScanner(int argc, string *argv);
+
 
 /*
 TO_DO: Include later mainScaner (A22) and mainParser (A32)
 */
-novaScript_void printLogo();
+void printLogo();
 
 #endif
