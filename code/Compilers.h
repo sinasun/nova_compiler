@@ -70,7 +70,7 @@ typedef char *string;
 
 typedef unsigned char uint8;
 
-typedef unsigned char bool;
+// typedef unsigned char bool;
 
 /*
 ------------------------------------------------------------
@@ -94,6 +94,10 @@ Main functions signatures
 ------------------------------------------------------------
 */
 int mainReader(int argc, string *argv);
+
+
+int mainScanner(int argc, string *argv);
+
 
 /*
 TO_DO: Include later mainScaner (A22) and mainParser (A32)

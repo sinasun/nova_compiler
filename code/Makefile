@@ -177,6 +177,30 @@ MainReader.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Compiler.dir/build.make CMakeFiles/Compiler.dir/MainReader.c.s
 .PHONY : MainReader.c.s
 
+MainScanner.o: MainScanner.c.o
+.PHONY : MainScanner.o
+
+# target to build an object file
+MainScanner.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Compiler.dir/build.make CMakeFiles/Compiler.dir/MainScanner.c.o
+.PHONY : MainScanner.c.o
+
+MainScanner.i: MainScanner.c.i
+.PHONY : MainScanner.i
+
+# target to preprocess a source file
+MainScanner.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Compiler.dir/build.make CMakeFiles/Compiler.dir/MainScanner.c.i
+.PHONY : MainScanner.c.i
+
+MainScanner.s: MainScanner.c.s
+.PHONY : MainScanner.s
+
+# target to generate assembly for a file
+MainScanner.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Compiler.dir/build.make CMakeFiles/Compiler.dir/MainScanner.c.s
+.PHONY : MainScanner.c.s
+
 Reader.o: Reader.c.o
 .PHONY : Reader.o
 
@@ -201,6 +225,30 @@ Reader.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Compiler.dir/build.make CMakeFiles/Compiler.dir/Reader.c.s
 .PHONY : Reader.c.s
 
+Scanner.o: Scanner.c.o
+.PHONY : Scanner.o
+
+# target to build an object file
+Scanner.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Compiler.dir/build.make CMakeFiles/Compiler.dir/Scanner.c.o
+.PHONY : Scanner.c.o
+
+Scanner.i: Scanner.c.i
+.PHONY : Scanner.i
+
+# target to preprocess a source file
+Scanner.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Compiler.dir/build.make CMakeFiles/Compiler.dir/Scanner.c.i
+.PHONY : Scanner.c.i
+
+Scanner.s: Scanner.c.s
+.PHONY : Scanner.s
+
+# target to generate assembly for a file
+Scanner.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Compiler.dir/build.make CMakeFiles/Compiler.dir/Scanner.c.s
+.PHONY : Scanner.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -216,9 +264,15 @@ help:
 	@echo "... MainReader.o"
 	@echo "... MainReader.i"
 	@echo "... MainReader.s"
+	@echo "... MainScanner.o"
+	@echo "... MainScanner.i"
+	@echo "... MainScanner.s"
 	@echo "... Reader.o"
 	@echo "... Reader.i"
 	@echo "... Reader.s"
+	@echo "... Scanner.o"
+	@echo "... Scanner.i"
+	@echo "... Scanner.s"
 .PHONY : help
 
 
