@@ -13,7 +13,7 @@
 |   /  |/ / __ \ | / / __ `/   \__ \/ ___/ ___/ / __ \/ __/  |
 |  / /|  / /_/ / |/ / /_/ /   ___/ / /__/ /  / / /_/ / /_    |
 | /_/ |_/\____/|___/\__,_/   /____/\___/_/  /_/ .___/\__/    |
-                                           /_/               |
+										   /_/               |
 =------------------------------------------------------------=
 */
 
@@ -21,7 +21,7 @@
 ************************************************************
 * File name: MainScanner.c
 * Compiler: MS Visual Studio 2022
-* Course: CST 8152 � Compilers, Lab Section: [011, 012]
+* Course: CST 8152 ? Compilers, Lab Section: [011, 012]
 * Assignment: A22, A32.
 * Date: May 01 2022
 * Purpose: This file is the main code for Scanner (A22)
@@ -77,10 +77,10 @@
 
  /* Global objects - variables (used in other codes as external) */
 BufferPointer stringLiteralTable;	/* This buffer implements String Literal Table */
-int errorNumber;				/* Run-time error number = 0 by default (ANSI) */
+int64 errorNumber;				/* Run-time error number = 0 by default (ANSI) */
 
 /* External objects */
-extern int line; /* Source code line numbers - defined in scanner.c */
+extern int64 line; /* Source code line numbers - defined in scanner.c */
 extern Token tokenizer(void);
 
 /*
@@ -90,7 +90,7 @@ extern Token tokenizer(void);
  */
 void printScannerError(string fmt, ...);
 void displayScanner(BufferPointer ptrBuffer);
-int32 getScannerFilesize(string fname);
+int getScannerFilesize(string fname);
 void printToken(Token t);
 
 /*
@@ -103,12 +103,12 @@ void printToken(Token t);
  ***********************************************************
  */
 
-int mainScanner(int argc, string* argv) {
+int64 mainScanner(int64 argc, string* argv) {
 
 	BufferPointer sourceBuffer;		/* Pointer to input (source) buffer */
 	FILE* fileHandler;				/* Input file handle */
 	Token currentToken;				/* Token produced by the scanner */
-	int loadSize = 0;			/* The size of the file loaded in the buffer */
+	int64 loadSize = 0;			/* The size of the file loaded in the buffer */
 
 	/* Check for correct arrguments - source file name */
 	if (argc <= 2) {
@@ -243,9 +243,9 @@ void displayScanner(BufferPointer ptrBuffer) {
  ***********************************************************
  */
 
-int32 getScannerFilesize(string fname) {
+int getScannerFilesize(string fname) {
 	FILE* fileInput;
-	int32 fileLength;
+	int fileLength;
 	fileInput = fopen(fname, "r");
 	if (fileInput == NULL) {
 		printScannerError("%s%s", "Cannot open file: ", fname);

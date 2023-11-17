@@ -61,14 +61,13 @@ NOTE: Some types may not be directly used by your language,
 
 /* TO_DO: Define your typedefs */
 // typedef int int;
-typedef long int32;
+typedef long int64;
 typedef float float32;
+typedef double float64;
 // typedef void void;
 
 typedef char rune;
 typedef char *string;
-
-typedef unsigned char uint8;
 
 // typedef unsigned char bool;
 
@@ -94,10 +93,6 @@ Main functions signatures
 ------------------------------------------------------------
 */
 int mainReader(int argc, string *argv);
-
-
-int mainScanner(int argc, string *argv);
-
 
 /*
 TO_DO: Include later mainScaner (A22) and mainParser (A32)

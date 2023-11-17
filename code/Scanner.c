@@ -1,4 +1,4 @@
-/*
+﻿/*
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Fall, 2023
@@ -13,7 +13,7 @@
 |   /  |/ / __ \ | / / __ `/   \__ \/ ___/ ___/ / __ \/ __/  |
 |  / /|  / /_/ / |/ / /_/ /   ___/ / /__/ /  / / /_/ / /_    |
 | /_/ |_/\____/|___/\__,_/   /____/\___/_/  /_/ .___/\__/    |
-                                           /_/               |
+										   /_/               |
 =------------------------------------------------------------=
 */
 
@@ -71,13 +71,13 @@ TO_DO: Global vars definitions
 /* Global objects - variables */
 /* This buffer is used as a repository for string literals. */
 extern BufferPointer stringLiteralTable;	/* String literal table */
-int line;								/* Current line number of the source code */
-extern int errorNumber;				/* Defined in platy_st.c - run-time error number */
+int64 line;								/* Current line number of the source code */
+extern int64 errorNumber;				/* Defined in platy_st.c - run-time error number */
 
-extern int stateType[NUM_STATES];
+extern int64 stateType[NUM_STATES];
 extern string keywordTable[KWT_SIZE];
 extern PTR_ACCFUN finalStateTable[NUM_STATES];
-extern int transitionTable[NUM_STATES][CHAR_CLASSES];
+extern int64 transitionTable[NUM_STATES][CHAR_CLASSES];
 
 /* Local(file) global objects - variables */
 static BufferPointer lexemeBuffer;			/* Pointer to temporary lexeme buffer */
@@ -91,9 +91,9 @@ static BufferPointer sourceBuffer;			/* Pointer to input source buffer */
  */
  /* TO_DO: Follow the standard and adjust datatypes */
 
-int startScanner(BufferPointer psc_buf) {
+int64 startScanner(BufferPointer psc_buf) {
 	/* TO_DO: Start histogram */
-	for (int i=0; i<NUM_TOKENS;i++)
+	for (int64 i=0; i<NUM_TOKENS;i++)
 		scData.scanHistogram[i] = 0;
 	/* Basic scanner initialization */
 	/* in case the buffer has been read previously  */
@@ -121,14 +121,14 @@ Token tokenizer(void) {
 
 	Token currentToken = { 0 }; /* token to return after pattern recognition. Set all structure members to 0 */
 	rune c;	/* input symbol */
-	int state = 0;		/* initial state of the FSM */
-	int lexStart;		/* start offset of a lexeme in the input char buffer (array) */
-	int lexEnd;		/* end offset of a lexeme in the input char buffer (array)*/
+	int64 state = 0;		/* initial state of the FSM */
+	int64 lexStart;		/* start offset of a lexeme in the input char buffer (array) */
+	int64 lexEnd;		/* end offset of a lexeme in the input char buffer (array)*/
 
-	int lexLength;		/* token length */
-	int i;				/* counter */
+	int64 lexLength;		/* token length */
+	int64 i;				/* counter */
 	/*
-	rune newc;			// new char
+	sofia_char newc;			// new char
 	*/
 
 	while (1) { /* endless loop broken by token returns it will generate a warning */
@@ -173,6 +173,72 @@ Token tokenizer(void) {
 			currentToken.code = RBR_T;
 			scData.scanHistogram[currentToken.code]++;
 			return currentToken;
+		case '=':
+			currentToken.code = OPASSIGN_T;
+			scData.scanHistogram[currentToken.code]++;
+			return currentToken;
+		case '*':
+			currentToken.code = OP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_MUL;
+			return currentToken;
+		case '-':
+			currentToken.code = OP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_SUB;
+			return currentToken;
+		case '+':
+			currentToken.code = OP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_ADD;
+			return currentToken;
+		case ',':
+			currentToken.code = OP_NE;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_NE;
+			return currentToken;
+		case '<':
+			currentToken.code = CMP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_LT;
+			return currentToken;
+		case '>':
+			currentToken.code = CMP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_GT;
+			return currentToken;
+		
+		case '/':
+			currentToken.code = OP_DIV;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_DIV;
+			return currentToken;
+		case '~':
+			currentToken.code = CMP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_NE;
+			return currentToken;
+		case '&':
+			currentToken.code = LOOP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_AND;
+			return currentToken;
+		case '|':
+			currentToken.code = LOOP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_OR;
+			return currentToken;
+		case '!':
+			currentToken.code = LOOP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_NOT;
+			return currentToken;
+		case '@':
+			currentToken.code = CMP_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.arithmeticOperator = OP_EQ;
+			return currentToken;
+
 		/* Cases for END OF FILE */
 		case CHARSEOF0:
 			currentToken.code = SEOF_T;
@@ -207,9 +273,10 @@ Token tokenizer(void) {
 				readerRetract(sourceBuffer);
 			lexEnd = readerGetPosRead(sourceBuffer);
 			lexLength = lexEnd - lexStart;
-			lexemeBuffer = readerCreate((int)lexLength + 2, 0, MODE_FIXED);
-			if (!lexemeBuffer) {
-				fprintf(stderr, "Scanner error: Can not create buffer\n");
+			lexemeBuffer = readerCreate((int64)lexLength + 2, 100, MODE_FIXED);
+			printf("%d:", lexLength);
+			if (!lexemeBuffer) {                                              
+				fprintf(stderr, "Scanner error:: Can not create buffer\n");
 				exit(1);
 			}
 			readerRestore(sourceBuffer);
@@ -252,9 +319,9 @@ Token tokenizer(void) {
  */
  /* TO_DO: Just change the datatypes */
 
-int nextState(int state, rune c) {
-	int col;
-	int next;
+int64 nextState(int64 state, rune c) {
+	int64 col;
+	int64 next;
 	col = nextClass(c);
 	next = transitionTable[state][col];
 	if (DEBUG)
@@ -283,8 +350,8 @@ int nextState(int state, rune c) {
 /*    [A-z],[0-9],    _,    &,   \', SEOF,    #, other
 	   L(0), D(1), U(2), M(3), Q(4), E(5), C(6),  O(7) */
 
-int nextClass(rune c) {
-	int val = -1;
+int64 nextClass(rune c) {
+	int64 val = -1;
 	switch (c) {
 	case CHRCOL2:
 		val = 2;
@@ -297,6 +364,9 @@ int nextClass(rune c) {
 		break;
 	case CHRCOL6:
 		val = 6;
+		break;
+	case CHRCOL8:
+		val = 8;
 		break;
 	case CHARSEOF0:
 	case CHARSEOF255:
@@ -323,7 +393,7 @@ int nextClass(rune c) {
 
 Token funcCMT(string lexeme) {
 	Token currentToken = { 0 };
-	int i = 0, len = (int)strlen(lexeme);
+	int64 i = 0, len = (int64)strlen(lexeme);
 	currentToken.attribute.contentString = readerGetPosWrte(stringLiteralTable);
 	for (i = 1; i < len - 1; i++) {
 		if (lexeme[i] == '\n')
@@ -349,20 +419,35 @@ Token funcCMT(string lexeme) {
 
 Token funcIL(string lexeme) {
 	Token currentToken = { 0 };
-	int32 tlong;
-	if (lexeme[0] != '\0' && strlen(lexeme) > NUM_LEN) {
-		currentToken = (*finalStateTable[ESNR])(lexeme);
-	}
-	else {
+	int tlong;
+	
+	 
 		tlong = atol(lexeme);
 		if (tlong >= 0 && tlong <= SHRT_MAX) {
 			currentToken.code = INL_T;
 			scData.scanHistogram[currentToken.code]++;
-			currentToken.attribute.intValue = (int)tlong;
+			currentToken.attribute.intValue = (int64)tlong;
 		}
 		else {
 			currentToken = (*finalStateTable[ESNR])(lexeme);
+		
+	}
+	return currentToken;
+}
+Token funcFL(string lexeme) {
+	Token currentToken = { 0 };
+	float64 tlong;
+	
+	
+		tlong = atof(lexeme);
+		if (tlong >= 0 ) {
+			currentToken.code = FLL_T;
+			scData.scanHistogram[currentToken.code]++;
+			currentToken.attribute.floatValue = (float32)tlong;
 		}
+		else {
+			currentToken = (*finalStateTable[ESNR])(lexeme);
+		
 	}
 	return currentToken;
 }
@@ -386,11 +471,12 @@ Token funcID(string lexeme) {
 	Token currentToken = { 0 };
 	size_t length = strlen(lexeme);
 	rune lastch = lexeme[length - 1];
-	int isID = NOVASCRIPT_FALSE;
+	int64 isID = NOVASCRIPT_FALSE;
 	switch (lastch) {
 		case MNID_SUF:
 			currentToken.code = MNID_T;
 			scData.scanHistogram[currentToken.code]++;
+			scData.scanHistogram[LPR_T]++;
 			isID = NOVASCRIPT_TRUE;
 			break;
 		default:
@@ -400,7 +486,7 @@ Token funcID(string lexeme) {
 			break;
 	}
 	if (isID == NOVASCRIPT_TRUE) {
-		strncpy(currentToken.attribute.idLexeme, lexeme, VID_LEN);
+		strncpy(currentToken.attribute.idLexeme, lexeme, length - 1);
 		currentToken.attribute.idLexeme[VID_LEN] = CHARSEOF0;
 	}
 	return currentToken;
@@ -421,7 +507,7 @@ Token funcID(string lexeme) {
 
 Token funcSL(string lexeme) {
 	Token currentToken = { 0 };
-	int i = 0, len = (int)strlen(lexeme);
+	int64 i = 0, len = (int64)strlen(lexeme);
 	currentToken.attribute.contentString = readerGetPosWrte(stringLiteralTable);
 	for (i = 1; i < len - 1; i++) {
 		if (lexeme[i] == '\n')
@@ -457,9 +543,9 @@ Token funcSL(string lexeme) {
 
 Token funcKEY(string lexeme) {
 	Token currentToken = { 0 };
-	int kwindex = -1, j = 0;
-	int len = (int)strlen(lexeme);
-	lexeme[len - 1] = '\0';
+	int64 kwindex = -1, j = 0;
+	int64 len = (int64)strlen(lexeme);
+	//lexeme[len - 1] = '\0';
 	for (j = 0; j < KWT_SIZE; j++)
 		if (!strcmp(lexeme, &keywordTable[j][0]))
 			kwindex = j;
@@ -469,7 +555,10 @@ Token funcKEY(string lexeme) {
 		currentToken.attribute.codeType = kwindex;
 	}
 	else {
-		currentToken = funcErr(lexeme);
+		currentToken.code = VAR_T;
+		scData.scanHistogram[currentToken.code]++;
+		strncpy(currentToken.attribute.idLexeme, lexeme, VID_LEN);
+		currentToken.attribute.idLexeme[VID_LEN] = CHARSEOF0;
 	}
 	return currentToken;
 }
@@ -489,7 +578,7 @@ Token funcKEY(string lexeme) {
 
 Token funcErr(string lexeme) {
 	Token currentToken = { 0 };
-	int i = 0, len = (int)strlen(lexeme);
+	int64 i = 0, len = (int64)strlen(lexeme);
 	if (len > ERR_LEN) {
 		strncpy(currentToken.attribute.errLexeme, lexeme, ERR_LEN - 3);
 		currentToken.attribute.errLexeme[ERR_LEN - 3] = CHARSEOF0;
@@ -533,10 +622,22 @@ void printToken(Token t) {
 		break;
 	case MNID_T:
 		printf("MNID_T\t\t%s\n", t.attribute.idLexeme);
+		printf("LPR_T\n");
+		break;
+	case VAR_T:
+		printf("VAR_T\t\t%s\n", t.attribute.idLexeme);
 		break;
 	case STR_T:
-		printf("STR_T\t\t%d\t ", (int)t.attribute.codeType);
-		printf("%s\n", readerGetContent(stringLiteralTable, (int)t.attribute.codeType));
+		printf("STR_T\t\t%d\t ", (int64)t.attribute.codeType);
+		printf("%s\n", readerGetContent(stringLiteralTable, (int64)t.attribute.codeType));
+		break;
+	case INL_T:
+		printf("INL_T\t\t%d\n ", (int64)t.attribute.intValue);
+		
+		break;
+	case FLL_T:
+		printf("FLL_T\t\t%f\n ", (float32)t.attribute.floatValue);
+
 		break;
 	case LPR_T:
 		printf("LPR_T\n");
@@ -550,8 +651,20 @@ void printToken(Token t) {
 	case RBR_T:
 		printf("RBR_T\n");
 		break;
+	case OPASSIGN_T:
+		printf("OPASSIGN_T\n");
+		break;
 	case KW_T:
 		printf("KW_T\t\t%s\n", keywordTable[t.attribute.codeType]);
+		break;
+	case OP_T:
+       printf("OP_T\t\t%d\n", t.attribute.arithmeticOperator);
+		break;
+	case CMP_T:
+		printf("CMP_T\t\t%d\n", t.attribute.relationalOperator);
+		break;
+	case LOOP_T:
+		printf("LOOP_T\t\t%d\n", t.attribute.logicalOperator);
 		break;
 	case CMT_T:
 		printf("CMT_T\n");

@@ -73,7 +73,7 @@
  */
 void bErrorPrint(string fmt, ...);
 void displayBuffer(Buffer *ptr_Buffer);
-int32 getFileSize(string fname);
+int64 getFileSize(string fname);
 int isNumber(const string ns);
 void startReader(string, string, rune, int, int);
 
@@ -256,10 +256,10 @@ void bErrorPrint(string fmt, ...)
 ************************************************************
 */
 
-int32 getFileSize(string fname)
+int64 getFileSize(string fname)
 {
     FILE *input;
-    int32 flength;
+    int64 flength;
     input = fopen(fname, "r");
     if (input == NULL)
     {

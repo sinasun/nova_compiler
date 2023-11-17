@@ -44,6 +44,8 @@
 #include <stdio.h>  /* standard input/output */
 #include <malloc.h> /* for dynamic memory allocation*/
 #include <limits.h> /* implementation-defined data type ranges and limits */
+#include <stdbool.h> /* for boolean*/
+
 
 /* CONSTANTS DEFINITION: GENERAL (NOT LANGUAGE DEPENDENT) .................................. */
 
@@ -93,7 +95,7 @@ typedef struct bufferReader {
 	int		size;				/* current dynamic memory size (in bytes) allocated to character buffer */
 	int		increment;			/* character array increment factor */
 	int		mode;				/* operational mode indicator */
-	uint8		flags;				/* contains character array reallocation flag and end-of-buffer flag */
+	bool		flags;				/* contains character array reallocation flag and end-of-buffer flag */
 	Position		position;				/* Offset / position field */
 	int		histogram[NCHAR];	/* Statistics of chars */
 	int		numReaderErrors;	/* Number of errors from Reader */
@@ -122,7 +124,7 @@ int		readerGetPosMark	(BufferPointer const);
 int		readerGetSize		(BufferPointer const);
 int		readerGetInc		(BufferPointer const);
 int		readerGetMode		(BufferPointer const);
-uint8		readerGetFlags		(BufferPointer const);
+bool		readerGetFlags		(BufferPointer const);
 void		readerPrintStat		(BufferPointer const);
 int		readerNumErrors		(BufferPointer const);
 

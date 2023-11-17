@@ -2,7 +2,7 @@
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Fall, 2023
-* Author: Sina Khodaveisi, Ark Gupte
+* Author: Sina Khodaveisi, Ark Gupte 
 * Professors: Paulo Sousa
 ************************************************************
 =------------------------------------------------------------=
@@ -49,7 +49,7 @@
 ***********************************************************
 * Function name: readerCreate
 * Purpose: Creates the buffer reader according to capacity, increment
-    factor and operational mode ('f', 'a', 'm')
+	factor and operational mode ('f', 'a', 'm')
 * Author: Svillen Ranev / Paulo Sousa
 * History/Versions: S22
 * Called functions: calloc(), malloc()
@@ -62,43 +62,42 @@
 *************************************************************
 */
 
-BufferPointer readerCreate(int size, int increment, int mode)
-{
-    BufferPointer readerPointer;
-    if (size <= 0 || increment <= 0 || (mode != MODE_FIXED && mode != MODE_ADDIT && mode != MODE_MULTI))
-    {
+BufferPointer readerCreate(int size, int increment, int mode) {
+	BufferPointer readerPointer;
+    if (size <= 0 || increment <= 0 || (mode != MODE_FIXED && mode != MODE_ADDIT && mode != MODE_MULTI)) {
         return NULL;
     }
-    readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));
-    if (!readerPointer)
-        return NULL;
-    readerPointer->content = (string)malloc(size);
+	/* TO_DO: Adjust the values according to parameters */
+	readerPointer = (BufferPointer)calloc(1, sizeof(Buffer));
+	if (!readerPointer)
+		return NULL;
+	readerPointer->content = (string)malloc(size);
 
-    if (!readerPointer->content)
-    {
+    if (!readerPointer->content) {
         free(readerPointer);
         return NULL;
     }
 
-    for (int i = 0; i < NCHAR; i++)
-    {
+    for (int i = 0; i < NCHAR; i++) {
         readerPointer->histogram[i] = 0;
     }
 
-    readerPointer->size = size;
-    readerPointer->increment = increment;
-    readerPointer->mode = mode;
+	readerPointer->size = size;
+	readerPointer->increment = increment;
+	readerPointer->mode = mode;
 
     readerPointer->flags = 0;
-    readerPointer->flags |= EMP_FLAG;
-    /* NEW: Cleaning the content */
-    if (readerPointer->content)
-        readerPointer->content[0] = READER_TERMINATOR;
-    readerPointer->position.wrte = 0;
-    readerPointer->position.mark = 0;
-    readerPointer->position.read = 0;
-    return readerPointer;
+	/* TO_DO: The created flag must be signalized as EMP */
+    readerPointer->flags |= EMP_FLAG; 
+	/* NEW: Cleaning the content */
+	if (readerPointer->content)
+		readerPointer->content[0] = READER_TERMINATOR;
+	readerPointer->position.wrte = 0;
+	readerPointer->position.mark = 0;
+	readerPointer->position.read = 0;
+	return readerPointer;
 }
+
 
 /*
 ***********************************************************
@@ -112,62 +111,53 @@ BufferPointer readerCreate(int size, int increment, int mode)
 *************************************************************
 */
 
-BufferPointer readerAddChar(BufferPointer const readerPointer, rune ch)
-{
-    string tempReader = NULL;
-    int newSize = 0;
+BufferPointer readerAddChar(BufferPointer const readerPointer, rune ch) {
+	string tempReader = NULL;
+	int newSize = 0;
 
-    if (readerPointer == NULL || readerPointer->content == NULL)
-    {
+    if (readerPointer == NULL || readerPointer->content == NULL) {
         return NULL;
     }
 
     readerPointer->flags &= ~REL_FLAG;
-    if (readerPointer->position.wrte * (int)sizeof(rune) < readerPointer->size)
-    {
-        // no action needed
-    }
-    else
-    {
+	if (readerPointer->position.wrte * (int)sizeof(rune) < readerPointer->size) {
+		//no action needed
+	} else {
         readerPointer->flags &= ~FUL_FLAG;
 
-        switch (readerPointer->mode)
-        {
-        case MODE_FIXED:
-            return NULL;
-        case MODE_ADDIT:
+		switch (readerPointer->mode) {
+		case MODE_FIXED:
+			return NULL;
+		case MODE_ADDIT:
             newSize = readerPointer->size + readerPointer->increment;
-            if (newSize > READER_MAX_SIZE)
-            {
+            if (newSize > READER_MAX_SIZE) {
                 return NULL;
             }
-            break;
-        case MODE_MULTI:
+			break;
+		case MODE_MULTI:
             newSize = readerPointer->size * readerPointer->increment;
-            if (newSize > READER_MAX_SIZE)
-            {
+            if (newSize > READER_MAX_SIZE) {
                 return NULL;
             }
-            break;
-        default:
-            return NULL;
-        }
+			break;
+		default:
+			return NULL;
+		}
         tempReader = (string)realloc(readerPointer->content, newSize);
-        if (tempReader == NULL)
-        {
+        if (tempReader == NULL) {
             return NULL;
         }
         readerPointer->content = tempReader;
         readerPointer->size = newSize;
         readerPointer->flags |= REL_FLAG;
-    }
-    readerPointer->content[readerPointer->position.wrte++] = ch;
-    if (ch >= 0)
-    {
+	}
+	/* TO_DO: Add the char */
+	readerPointer->content[readerPointer->position.wrte++] = ch;
+    if (ch >= 0) {
         readerPointer->histogram[ch]++;
     }
 
-    return readerPointer;
+	return readerPointer;
 }
 
 /*
@@ -180,10 +170,8 @@ BufferPointer readerAddChar(BufferPointer const readerPointer, rune ch)
 *	Boolean value about operation success
 *************************************************************
 */
-bool readerClear(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL || readerPointer->content == NULL)
-    {
+bool readerClear(BufferPointer const readerPointer) {
+    if (readerPointer == NULL || readerPointer->content == NULL) {
         return NOVASCRIPT_FALSE;
     }
 
@@ -204,18 +192,15 @@ bool readerClear(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-bool readerFree(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+bool readerFree(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return NOVASCRIPT_FALSE;
     }
-    if (readerPointer->content != NULL)
-    {
+    if (readerPointer->content != NULL) {
         free(readerPointer->content);
     }
     free(readerPointer);
-    return NOVASCRIPT_TRUE;
+	return NOVASCRIPT_TRUE;
 }
 
 /*
@@ -228,14 +213,13 @@ bool readerFree(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-bool readerIsFull(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+bool readerIsFull(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return NOVASCRIPT_FALSE;
     }
     return (readerPointer->flags & FUL_FLAG) != 0 ? NOVASCRIPT_TRUE : NOVASCRIPT_FALSE;
 }
+
 
 /*
 ***********************************************************
@@ -247,10 +231,8 @@ bool readerIsFull(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-bool readerIsEmpty(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+bool readerIsEmpty(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return NOVASCRIPT_FALSE;
     }
     return (readerPointer->flags & EMP_FLAG) != 0 ? NOVASCRIPT_TRUE : NOVASCRIPT_FALSE;
@@ -267,13 +249,11 @@ bool readerIsEmpty(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-bool readerSetMark(BufferPointer const readerPointer, int mark)
-{
-    if (readerPointer == NULL || mark < 0 || mark > readerPointer->position.wrte)
-    {
+bool readerSetMark(BufferPointer const readerPointer, int mark) {
+    if (readerPointer == NULL || mark < 0 || mark > readerPointer->position.wrte) {
         return NOVASCRIPT_FALSE;
     }
-
+    
     readerPointer->position.mark = mark;
 
     return NOVASCRIPT_TRUE;
@@ -289,20 +269,17 @@ bool readerSetMark(BufferPointer const readerPointer, int mark)
 *	Number of chars printed.
 *************************************************************
 */
-int readerPrint(BufferPointer const readerPointer)
-{
+int readerPrint(BufferPointer const readerPointer) {
     int cont = 0;
     rune c;
 
-    if (readerPointer == NULL)
-    {
+    if (readerPointer == NULL) {
         return 0;
     }
 
     c = readerGetChar(readerPointer);
 
-    while (cont < readerPointer->position.wrte)
-    {
+    while (cont < readerPointer->position.wrte) {
         cont++;
         printf("%c", c);
         c = readerGetChar(readerPointer);
@@ -315,7 +292,7 @@ int readerPrint(BufferPointer const readerPointer)
 ***********************************************************
 * Function name: readerLoad
 * Purpose: Loads the string in the buffer with the content of
-    an specific file.
+	an specific file.
 * Parameters:
 *   readerPointer = pointer to Buffer Reader
 *   fileDescriptor = pointer to file descriptor
@@ -323,22 +300,18 @@ int readerPrint(BufferPointer const readerPointer)
 *	Number of chars read and put in buffer.
 *************************************************************
 */
-int readerLoad(BufferPointer const readerPointer, FILE *const fileDescriptor)
-{
+int readerLoad(BufferPointer const readerPointer, FILE* const fileDescriptor) {
     int size = 0;
     rune c;
 
-    if (readerPointer == NULL || fileDescriptor == NULL)
-    {
+    if (readerPointer == NULL || fileDescriptor == NULL) {
         return READER_ERROR;
     }
 
     c = (rune)fgetc(fileDescriptor);
 
-    while (!feof(fileDescriptor))
-    {
-        if (!readerAddChar(readerPointer, c))
-        {
+    while (!feof(fileDescriptor)) {
+        if (!readerAddChar(readerPointer, c)) {
             ungetc(c, fileDescriptor);
             return READER_ERROR;
         }
@@ -360,10 +333,8 @@ int readerLoad(BufferPointer const readerPointer, FILE *const fileDescriptor)
 *************************************************************
 */
 
-bool readerRecover(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+bool readerRecover(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return NOVASCRIPT_FALSE;
     }
 
@@ -382,15 +353,12 @@ bool readerRecover(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-bool readerRetract(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+bool readerRetract(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return NOVASCRIPT_FALSE;
     }
 
-    if (readerPointer->position.read > 0)
-    {
+    if (readerPointer->position.read > 0) {
         readerPointer->position.read--;
     }
 
@@ -407,10 +375,8 @@ bool readerRetract(BufferPointer const readerPointer)
 *	Boolean value about operation success
 *************************************************************
 */
-bool readerRestore(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+bool readerRestore(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return NOVASCRIPT_FALSE;
     }
 
@@ -429,18 +395,15 @@ bool readerRestore(BufferPointer const readerPointer)
 *	Char in the getC position.
 *************************************************************
 */
-rune readerGetChar(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL || readerPointer->position.read >= readerPointer->position.wrte)
-    {
+rune readerGetChar(BufferPointer const readerPointer) {
+    if (readerPointer == NULL || readerPointer->position.read >= readerPointer->position.wrte) {
         readerPointer->flags |= END_FLAG;
         return READER_TERMINATOR;
     }
 
     readerPointer->flags &= ~END_FLAG;
 
-    if (readerPointer->position.wrte > 0)
-    {
+    if (readerPointer->position.wrte > 0) {
         return readerPointer->content[readerPointer->position.read++];
     }
     return READER_TERMINATOR;
@@ -457,10 +420,8 @@ rune readerGetChar(BufferPointer const readerPointer)
 *	Position of string char.
 *************************************************************
 */
-string readerGetContent(BufferPointer const readerPointer, int pos)
-{
-    if (readerPointer == NULL || pos < 0 || pos >= readerPointer->position.wrte)
-    {
+string readerGetContent(BufferPointer const readerPointer, int pos) {
+    if (readerPointer == NULL || pos < 0 || pos >= readerPointer->position.wrte) {
         return NULL;
     }
 
@@ -477,10 +438,8 @@ string readerGetContent(BufferPointer const readerPointer, int pos)
 *	The read position offset.
 *************************************************************
 */
-int readerGetPosRead(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+int readerGetPosRead(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return READER_ERROR;
     }
 
@@ -497,15 +456,14 @@ int readerGetPosRead(BufferPointer const readerPointer)
 *	Write position
 *************************************************************
 */
-int readerGetPosWrte(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+int readerGetPosWrte(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return READER_ERROR;
     }
 
     return readerPointer->position.wrte;
 }
+
 
 /*
 ***********************************************************
@@ -517,15 +475,14 @@ int readerGetPosWrte(BufferPointer const readerPointer)
 *	Mark position.
 *************************************************************
 */
-int readerGetPosMark(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
-        return READER_ERROR;
-    }
+int readerGetPosMark(BufferPointer const readerPointer) {
+	if (readerPointer == NULL) {
+		return READER_ERROR;
+	}
 
-    return readerPointer->position.mark;
+	return readerPointer->position.mark;
 }
+
 
 /*
 ***********************************************************
@@ -537,10 +494,8 @@ int readerGetPosMark(BufferPointer const readerPointer)
 *	Size of buffer.
 *************************************************************
 */
-int readerGetSize(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+int readerGetSize(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return READER_ERROR;
     }
 
@@ -557,10 +512,8 @@ int readerGetSize(BufferPointer const readerPointer)
 *	The Buffer increment.
 *************************************************************
 */
-int readerGetInc(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+int readerGetInc(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return READER_ERROR;
     }
 
@@ -577,15 +530,14 @@ int readerGetInc(BufferPointer const readerPointer)
 *	Operational mode.
 *************************************************************
 */
-int readerGetMode(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+int readerGetMode(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return READER_ERROR;
     }
 
     return readerPointer->mode;
 }
+
 
 /*
 ***********************************************************
@@ -597,15 +549,14 @@ int readerGetMode(BufferPointer const readerPointer)
 *	Flags from Buffer.
 *************************************************************
 */
-uint8 readerGetFlags(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+bool readerGetFlags(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return READER_ERROR;
     }
 
     return readerPointer->flags;
 }
+
 
 /*
 ***********************************************************
@@ -616,19 +567,16 @@ uint8 readerGetFlags(BufferPointer const readerPointer)
 * Return value: (Void)
 *************************************************************
 */
-void readerPrintStat(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+void readerPrintStat(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return;
     }
 
     printf("Reader Statistics:\n");
-    for (int i = 0; i < NCHAR; i++)
-    {
+    for (int i = 0; i < NCHAR; i++) {
         printf("B['%c']= %d, ", (char)i, readerPointer->histogram[i]);
     }
-    printf("\n");
+	printf("\n");
 }
 
 /*
@@ -641,18 +589,14 @@ void readerPrintStat(BufferPointer const readerPointer)
 *	Number of errors.
 *************************************************************
 */
-int readerNumErrors(BufferPointer const readerPointer)
-{
-    if (readerPointer == NULL)
-    {
+int readerNumErrors(BufferPointer const readerPointer) {
+    if (readerPointer == NULL) {
         return 0;
     }
 
     int numErrors = 0;
-    for (int i = 0; i < NCHAR; i++)
-    {
-        if (i < 0 || i >= NCHAR || readerPointer->histogram[i] < 0)
-        {
+    for (int i = 0; i < NCHAR; i++) {
+        if (i < 0 || i >= NCHAR || readerPointer->histogram[i] < 0) {
             numErrors++;
         }
     }
