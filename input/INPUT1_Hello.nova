@@ -1,7 +1,6 @@
-package main
-
-import "fmt"
 
 func main() {
-	fmt.Println("Hello world!")
+var num = 10
+var num2 = 10.2
+	Println("Hello world!")
 }

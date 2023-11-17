@@ -1,8 +1,4 @@
-package main
 
-import (
-    "fmt"
-)
 
 func main() {
     var FoundationYear int
@@ -15,5 +11,5 @@ func main() {
     HDI = 0.871
     CountryName = "Bulgaria"
 
-    fmt.Println(CountryName)
+    Println(CountryName)
 }

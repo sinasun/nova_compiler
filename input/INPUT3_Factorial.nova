@@ -1,8 +1,3 @@
-package main
-
-import (
-    "fmt"
-)
 
 func main() {
     var i, n, f int
@@ -10,14 +5,14 @@ func main() {
     f = 1
     i = 1
 
-    fmt.Print("Write a number: ")
-    fmt.Scan(&n)
+    Print("Write a number: ")
+    Scan(n)
 
     for i < n {
         f = f * i
         i = i + 1
     }
 
-    fmt.Println("Factorial:")
-    fmt.Println(f)
+  Println("Factorial:")
+  Println(f)
 }
